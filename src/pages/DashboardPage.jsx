@@ -1,3 +1,5 @@
+import jobs from "../data/jobs";
+import JobCard from "../components/jobs/JobCard";
 import StatCard from "../components/jobs/StatCard";
 import MainLayout from "../components/layout/MainLayout";
 import dashboardStats from "../data/dashboardStats";
@@ -26,10 +28,20 @@ function DashboardPage() {
           </p>
         </section>
 
-        <section className="rounded-xl border bg-white p-6 shadow-sm">
-          <p className="text-sm text-gray-500">
-            Recent applications section will go here.
-          </p>
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold">Recent Applications</h2>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {jobs.map((job) => (
+              <JobCard
+                key={job.id}
+                company={job.company}
+                position={job.position}
+                status={job.status}
+                location={job.location}
+              />
+            ))}
+          </div>
         </section>
       </div>
     </MainLayout>
