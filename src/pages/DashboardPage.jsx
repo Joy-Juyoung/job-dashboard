@@ -7,7 +7,7 @@ import { useState } from "react";
 function DashboardPage({ jobList, dashboardStats, onAddJob }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const recentJobs = jobList.slice(0, 5);
+  const recentJobs = jobList.slice(0, 4);
 
   function handleCloseForm() {
     setIsFormOpen(false);
@@ -30,22 +30,13 @@ function DashboardPage({ jobList, dashboardStats, onAddJob }) {
             </p>
           </div>
 
-          <div className="flex gap-3">
-            {/* <Link
-              to="/applications"
-              className="rounded-lg border bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
-            >
-              View All Applications
-            </Link> */}
-
-            <button
-              type="button"
-              onClick={() => setIsFormOpen((prev) => !prev)}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
-            >
-              {isFormOpen ? "Close Form" : "Add New Job"}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsFormOpen((prev) => !prev)}
+            className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+          >
+            {isFormOpen ? "Close Form" : "Add New Job"}
+          </button>
         </div>
       </section>
 
@@ -76,7 +67,7 @@ function DashboardPage({ jobList, dashboardStats, onAddJob }) {
               Recent Applications
             </h2>
             <p className="text-sm text-gray-500">
-              Showing the 5 most recent job applications
+              Showing the 4 most recent job applications
             </p>
           </div>
 
