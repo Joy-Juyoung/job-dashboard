@@ -31,6 +31,7 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
   const [formData, setFormData] = useState(() =>
     getInitialFormData(editingJob),
   );
+  const [errors, setErrors] = useState({});
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -49,29 +50,91 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
 
       return updatedForm;
     });
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+      form: "",
+    }));
+  }
+
+  function validateForm() {
+    const nextErrors = {};
+
+    if (!formData.company.trim()) {
+      nextErrors.company = "Company is required.";
+    }
+
+    if (!formData.position.trim()) {
+      nextErrors.position = "Position is required.";
+    }
+
+    if (!formData.location.trim()) {
+      nextErrors.location = "Location is required.";
+    }
+
+    if (!formData.appliedDate) {
+      nextErrors.appliedDate = "Applied date is required.";
+    }
+
+    if (formData.status === "Interview" && !formData.interviewDate) {
+      nextErrors.interviewDate =
+        "Interview date is required for Interview status.";
+    }
+
+    if (formData.status === "Offer" && !formData.offerDate) {
+      nextErrors.offerDate = "Offer date is required for Offer status.";
+    }
+
+    if (formData.status === "Rejected" && !formData.rejectedDate) {
+      nextErrors.rejectedDate =
+        "Rejected date is required for Rejected status.";
+    }
+
+    if (
+      formData.interviewDate &&
+      formData.appliedDate &&
+      formData.interviewDate < formData.appliedDate
+    ) {
+      nextErrors.interviewDate =
+        "Interview date cannot be earlier than applied date.";
+    }
+
+    if (
+      formData.offerDate &&
+      formData.appliedDate &&
+      formData.offerDate < formData.appliedDate
+    ) {
+      nextErrors.offerDate = "Offer date cannot be earlier than applied date.";
+    }
+
+    if (
+      formData.rejectedDate &&
+      formData.appliedDate &&
+      formData.rejectedDate < formData.appliedDate
+    ) {
+      nextErrors.rejectedDate =
+        "Rejected date cannot be earlier than applied date.";
+    }
+
+    return nextErrors;
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const trimmedCompany = formData.company.trim();
-    const trimmedPosition = formData.position.trim();
-    const trimmedLocation = formData.location.trim();
+    const nextErrors = validateForm();
 
-    if (
-      !trimmedCompany ||
-      !trimmedPosition ||
-      !trimmedLocation ||
-      !formData.appliedDate
-    ) {
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
 
     const normalizedJob = {
-      company: trimmedCompany,
-      position: trimmedPosition,
+      company: formData.company.trim(),
+      position: formData.position.trim(),
       status: formData.status,
-      location: trimmedLocation,
+      location: formData.location.trim(),
       appliedDate: formData.appliedDate,
       interviewDate:
         formData.status === "Interview" ? formData.interviewDate : "",
@@ -96,6 +159,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
   }
 
   const isEditing = Boolean(editingJob);
+
+  const inputBaseClass =
+    "w-full rounded-xl border bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:ring-2";
+  const normalInputClass =
+    "border-gray-200 focus:border-gray-400 focus:ring-gray-200";
+  const errorInputClass =
+    "border-red-300 focus:border-red-400 focus:ring-red-100";
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
@@ -122,7 +192,7 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <label
@@ -138,8 +208,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
               value={formData.company}
               onChange={handleChange}
               placeholder="e.g. Shopify"
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+              className={`${inputBaseClass} ${
+                errors.company ? errorInputClass : normalInputClass
+              }`}
             />
+            {errors.company && (
+              <p className="text-xs text-red-600">{errors.company}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -156,8 +231,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
               value={formData.position}
               onChange={handleChange}
               placeholder="e.g. Frontend Developer"
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+              className={`${inputBaseClass} ${
+                errors.position ? errorInputClass : normalInputClass
+              }`}
             />
+            {errors.position && (
+              <p className="text-xs text-red-600">{errors.position}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -172,7 +252,7 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+              className={`${inputBaseClass} ${normalInputClass}`}
             >
               <option value="Applied">Applied</option>
               <option value="Interview">Interview</option>
@@ -195,8 +275,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
               value={formData.location}
               onChange={handleChange}
               placeholder="e.g. Remote or Calgary"
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+              className={`${inputBaseClass} ${
+                errors.location ? errorInputClass : normalInputClass
+              }`}
             />
+            {errors.location && (
+              <p className="text-xs text-red-600">{errors.location}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -212,8 +297,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
               type="date"
               value={formData.appliedDate}
               onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+              className={`${inputBaseClass} ${
+                errors.appliedDate ? errorInputClass : normalInputClass
+              }`}
             />
+            {errors.appliedDate && (
+              <p className="text-xs text-red-600">{errors.appliedDate}</p>
+            )}
           </div>
 
           {formData.status === "Interview" && (
@@ -230,8 +320,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
                 type="date"
                 value={formData.interviewDate}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+                className={`${inputBaseClass} ${
+                  errors.interviewDate ? errorInputClass : normalInputClass
+                }`}
               />
+              {errors.interviewDate && (
+                <p className="text-xs text-red-600">{errors.interviewDate}</p>
+              )}
             </div>
           )}
 
@@ -249,8 +344,13 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
                 type="date"
                 value={formData.offerDate}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+                className={`${inputBaseClass} ${
+                  errors.offerDate ? errorInputClass : normalInputClass
+                }`}
               />
+              {errors.offerDate && (
+                <p className="text-xs text-red-600">{errors.offerDate}</p>
+              )}
             </div>
           )}
 
@@ -268,11 +368,18 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
                 type="date"
                 value={formData.rejectedDate}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+                className={`${inputBaseClass} ${
+                  errors.rejectedDate ? errorInputClass : normalInputClass
+                }`}
               />
+              {errors.rejectedDate && (
+                <p className="text-xs text-red-600">{errors.rejectedDate}</p>
+              )}
             </div>
           )}
         </div>
+
+        {errors.form && <p className="text-sm text-red-600">{errors.form}</p>}
 
         <div className="flex justify-end gap-3 pt-2">
           <button
