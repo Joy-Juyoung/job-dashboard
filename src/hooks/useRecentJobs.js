@@ -1,23 +1,9 @@
 import { useMemo } from "react";
 
-function getLatestRelevantDate(job) {
-  return (
-    job.rejectedDate ||
-    job.offerDate ||
-    job.interviewDate ||
-    job.appliedDate ||
-    ""
-  );
-}
-
-function useRecentJobs(jobList, limit = 5) {
+function useRecentJobs(jobList, limit = 4) {
   return useMemo(() => {
     return [...jobList]
-      .sort(
-        (a, b) =>
-          new Date(getLatestRelevantDate(b)) -
-          new Date(getLatestRelevantDate(a)),
-      )
+      .sort((a, b) => new Date(b.appliedDate) - new Date(a.appliedDate))
       .slice(0, limit);
   }, [jobList, limit]);
 }

@@ -13,6 +13,8 @@ function ApplicationsPage({ jobList, onAddJob, onUpdateJob, onDeleteJob }) {
     setSelectedStatus,
     searchTerm,
     setSearchTerm,
+    sortOption,
+    setSortOption,
     filterOptions,
     filteredJobs,
     totalVisibleJobs,
@@ -97,6 +99,8 @@ function ApplicationsPage({ jobList, onAddJob, onUpdateJob, onDeleteJob }) {
           onSearchChange={setSearchTerm}
           onClearSearch={() => setSearchTerm("")}
           onResetFilters={resetFilters}
+          sortOption={sortOption}
+          onSortChange={setSortOption}
         />
 
         {filteredJobs.length > 0 ? (
