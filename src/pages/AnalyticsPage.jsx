@@ -33,7 +33,7 @@ function AnalyticsPage({ analyticsSummary }) {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         <p className="text-sm font-medium text-gray-500">Insights Overview</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
           Analytics
@@ -45,7 +45,7 @@ function AnalyticsPage({ analyticsSummary }) {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
-        <article className="rounded-2xl border bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-gray-500">
             Total Applications
           </p>
@@ -57,7 +57,7 @@ function AnalyticsPage({ analyticsSummary }) {
           </p>
         </article>
 
-        <article className="rounded-2xl border bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-gray-500">Response Rate</p>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
             {responseRate}
@@ -69,7 +69,7 @@ function AnalyticsPage({ analyticsSummary }) {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">
             Status Distribution
           </h2>
@@ -102,7 +102,7 @@ function AnalyticsPage({ analyticsSummary }) {
           </div>
         </article>
 
-        <article className="rounded-2xl border bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">
             Status Breakdown
           </h2>
@@ -143,7 +143,7 @@ function AnalyticsPage({ analyticsSummary }) {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">
             Response Insight
           </h2>
@@ -172,7 +172,7 @@ function AnalyticsPage({ analyticsSummary }) {
           </div>
         </article>
 
-        <article className="rounded-2xl border bg-white p-6 shadow-sm">
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">
             Timeline Highlights
           </h2>
