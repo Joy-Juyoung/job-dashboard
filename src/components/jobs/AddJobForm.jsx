@@ -1,171 +1,24 @@
-import { useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
+import useJobForm from "../../hooks/useJobForm";
+import FormInput from "./form/FormInput";
+import FormDateInput from "./form/FormDateInput";
+import FormSelect from "./form/FormSelect";
 
-function getInitialFormData(editingJob) {
-  if (editingJob) {
-    return {
-      company: editingJob.company || "",
-      position: editingJob.position || "",
-      status: editingJob.status || "Applied",
-      location: editingJob.location || "",
-      appliedDate: editingJob.appliedDate || "",
-      interviewDate: editingJob.interviewDate || "",
-      offerDate: editingJob.offerDate || "",
-      rejectedDate: editingJob.rejectedDate || "",
-    };
-  }
-
-  return {
-    company: "",
-    position: "",
-    status: "Applied",
-    location: "",
-    appliedDate: "",
-    interviewDate: "",
-    offerDate: "",
-    rejectedDate: "",
-  };
-}
+const statusOptions = [
+  { value: "Applied", label: "Applied" },
+  { value: "Interview", label: "Interview" },
+  { value: "Offer", label: "Offer" },
+  { value: "Rejected", label: "Rejected" },
+];
 
 function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
-  const [formData, setFormData] = useState(() =>
-    getInitialFormData(editingJob),
-  );
-  const [errors, setErrors] = useState({});
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-
-    setFormData((prev) => {
-      const updatedForm = {
-        ...prev,
-        [name]: value,
-      };
-
-      if (name === "status") {
-        if (value !== "Interview") updatedForm.interviewDate = "";
-        if (value !== "Offer") updatedForm.offerDate = "";
-        if (value !== "Rejected") updatedForm.rejectedDate = "";
-      }
-
-      return updatedForm;
+  const { formData, errors, isEditing, handleChange, handleSubmit } =
+    useJobForm({
+      editingJob,
+      onAddJob,
+      onUpdateJob,
+      onClose,
     });
-
-    setErrors((prev) => ({
-      ...prev,
-      [name]: "",
-      form: "",
-    }));
-  }
-
-  function validateForm() {
-    const nextErrors = {};
-
-    if (!formData.company.trim()) {
-      nextErrors.company = "Company is required.";
-    }
-
-    if (!formData.position.trim()) {
-      nextErrors.position = "Position is required.";
-    }
-
-    if (!formData.location.trim()) {
-      nextErrors.location = "Location is required.";
-    }
-
-    if (!formData.appliedDate) {
-      nextErrors.appliedDate = "Applied date is required.";
-    }
-
-    if (formData.status === "Interview" && !formData.interviewDate) {
-      nextErrors.interviewDate =
-        "Interview date is required for Interview status.";
-    }
-
-    if (formData.status === "Offer" && !formData.offerDate) {
-      nextErrors.offerDate = "Offer date is required for Offer status.";
-    }
-
-    if (formData.status === "Rejected" && !formData.rejectedDate) {
-      nextErrors.rejectedDate =
-        "Rejected date is required for Rejected status.";
-    }
-
-    if (
-      formData.interviewDate &&
-      formData.appliedDate &&
-      formData.interviewDate < formData.appliedDate
-    ) {
-      nextErrors.interviewDate =
-        "Interview date cannot be earlier than applied date.";
-    }
-
-    if (
-      formData.offerDate &&
-      formData.appliedDate &&
-      formData.offerDate < formData.appliedDate
-    ) {
-      nextErrors.offerDate = "Offer date cannot be earlier than applied date.";
-    }
-
-    if (
-      formData.rejectedDate &&
-      formData.appliedDate &&
-      formData.rejectedDate < formData.appliedDate
-    ) {
-      nextErrors.rejectedDate =
-        "Rejected date cannot be earlier than applied date.";
-    }
-
-    return nextErrors;
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const nextErrors = validateForm();
-
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      return;
-    }
-
-    const normalizedJob = {
-      company: formData.company.trim(),
-      position: formData.position.trim(),
-      status: formData.status,
-      location: formData.location.trim(),
-      appliedDate: formData.appliedDate,
-      interviewDate:
-        formData.status === "Interview" ? formData.interviewDate : "",
-      offerDate: formData.status === "Offer" ? formData.offerDate : "",
-      rejectedDate: formData.status === "Rejected" ? formData.rejectedDate : "",
-    };
-
-    if (editingJob) {
-      onUpdateJob({
-        ...editingJob,
-        ...normalizedJob,
-      });
-      onClose();
-      return;
-    }
-
-    onAddJob({
-      id: Date.now(),
-      ...normalizedJob,
-    });
-    onClose();
-  }
-
-  const isEditing = Boolean(editingJob);
-
-  const inputBaseClass =
-    "w-full rounded-xl border bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:ring-2";
-  const normalInputClass =
-    "border-gray-200 focus:border-gray-400 focus:ring-gray-200";
-  const errorInputClass =
-    "border-red-300 focus:border-red-400 focus:ring-red-100";
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-md">
@@ -194,188 +47,85 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
 
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <label
-              htmlFor="company"
-              className="text-sm font-medium text-gray-700"
-            >
-              Company
-            </label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              value={formData.company}
-              onChange={handleChange}
-              placeholder="e.g. Shopify"
-              className={`${inputBaseClass} ${
-                errors.company ? errorInputClass : normalInputClass
-              }`}
-            />
-            {errors.company && (
-              <p className="text-xs text-red-600">{errors.company}</p>
-            )}
-          </div>
+          <FormInput
+            id="company"
+            name="company"
+            label="Company"
+            value={formData.company}
+            onChange={handleChange}
+            placeholder="e.g. Shopify"
+            error={errors.company}
+          />
 
-          <div className="space-y-2">
-            <label
-              htmlFor="position"
-              className="text-sm font-medium text-gray-700"
-            >
-              Position
-            </label>
-            <input
-              id="position"
-              name="position"
-              type="text"
-              value={formData.position}
-              onChange={handleChange}
-              placeholder="e.g. Frontend Developer"
-              className={`${inputBaseClass} ${
-                errors.position ? errorInputClass : normalInputClass
-              }`}
-            />
-            {errors.position && (
-              <p className="text-xs text-red-600">{errors.position}</p>
-            )}
-          </div>
+          <FormInput
+            id="position"
+            name="position"
+            label="Position"
+            value={formData.position}
+            onChange={handleChange}
+            placeholder="e.g. Frontend Developer"
+            error={errors.position}
+          />
 
-          <div className="space-y-2">
-            <label
-              htmlFor="status"
-              className="text-sm font-medium text-gray-700"
-            >
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className={`${inputBaseClass} ${normalInputClass}`}
-            >
-              <option value="Applied">Applied</option>
-              <option value="Interview">Interview</option>
-              <option value="Offer">Offer</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-          </div>
+          <FormSelect
+            id="status"
+            name="status"
+            label="Status"
+            value={formData.status}
+            onChange={handleChange}
+            options={statusOptions}
+          />
 
-          <div className="space-y-2">
-            <label
-              htmlFor="location"
-              className="text-sm font-medium text-gray-700"
-            >
-              Location
-            </label>
-            <input
-              id="location"
-              name="location"
-              type="text"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder="e.g. Remote or Calgary"
-              className={`${inputBaseClass} ${
-                errors.location ? errorInputClass : normalInputClass
-              }`}
-            />
-            {errors.location && (
-              <p className="text-xs text-red-600">{errors.location}</p>
-            )}
-          </div>
+          <FormInput
+            id="location"
+            name="location"
+            label="Location"
+            value={formData.location}
+            onChange={handleChange}
+            placeholder="e.g. Remote or Calgary"
+            error={errors.location}
+          />
 
-          <div className="space-y-2">
-            <label
-              htmlFor="appliedDate"
-              className="text-sm font-medium text-gray-700"
-            >
-              Applied Date
-            </label>
-            <input
-              id="appliedDate"
-              name="appliedDate"
-              type="date"
-              value={formData.appliedDate}
-              onChange={handleChange}
-              className={`${inputBaseClass} ${
-                errors.appliedDate ? errorInputClass : normalInputClass
-              }`}
-            />
-            {errors.appliedDate && (
-              <p className="text-xs text-red-600">{errors.appliedDate}</p>
-            )}
-          </div>
+          <FormDateInput
+            id="appliedDate"
+            name="appliedDate"
+            label="Applied Date"
+            value={formData.appliedDate}
+            onChange={handleChange}
+            error={errors.appliedDate}
+          />
 
           {formData.status === "Interview" && (
-            <div className="space-y-2">
-              <label
-                htmlFor="interviewDate"
-                className="text-sm font-medium text-gray-700"
-              >
-                Interview Date
-              </label>
-              <input
-                id="interviewDate"
-                name="interviewDate"
-                type="date"
-                value={formData.interviewDate}
-                onChange={handleChange}
-                className={`${inputBaseClass} ${
-                  errors.interviewDate ? errorInputClass : normalInputClass
-                }`}
-              />
-              {errors.interviewDate && (
-                <p className="text-xs text-red-600">{errors.interviewDate}</p>
-              )}
-            </div>
+            <FormDateInput
+              id="interviewDate"
+              name="interviewDate"
+              label="Interview Date"
+              value={formData.interviewDate}
+              onChange={handleChange}
+              error={errors.interviewDate}
+            />
           )}
 
           {formData.status === "Offer" && (
-            <div className="space-y-2">
-              <label
-                htmlFor="offerDate"
-                className="text-sm font-medium text-gray-700"
-              >
-                Offer Date
-              </label>
-              <input
-                id="offerDate"
-                name="offerDate"
-                type="date"
-                value={formData.offerDate}
-                onChange={handleChange}
-                className={`${inputBaseClass} ${
-                  errors.offerDate ? errorInputClass : normalInputClass
-                }`}
-              />
-              {errors.offerDate && (
-                <p className="text-xs text-red-600">{errors.offerDate}</p>
-              )}
-            </div>
+            <FormDateInput
+              id="offerDate"
+              name="offerDate"
+              label="Offer Date"
+              value={formData.offerDate}
+              onChange={handleChange}
+              error={errors.offerDate}
+            />
           )}
 
           {formData.status === "Rejected" && (
-            <div className="space-y-2">
-              <label
-                htmlFor="rejectedDate"
-                className="text-sm font-medium text-gray-700"
-              >
-                Rejected Date
-              </label>
-              <input
-                id="rejectedDate"
-                name="rejectedDate"
-                type="date"
-                value={formData.rejectedDate}
-                onChange={handleChange}
-                className={`${inputBaseClass} ${
-                  errors.rejectedDate ? errorInputClass : normalInputClass
-                }`}
-              />
-              {errors.rejectedDate && (
-                <p className="text-xs text-red-600">{errors.rejectedDate}</p>
-              )}
-            </div>
+            <FormDateInput
+              id="rejectedDate"
+              name="rejectedDate"
+              label="Rejected Date"
+              value={formData.rejectedDate}
+              onChange={handleChange}
+              error={errors.rejectedDate}
+            />
           )}
         </div>
 
