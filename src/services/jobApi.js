@@ -41,3 +41,32 @@ export async function createJob(jobData) {
   const createdJob = await response.json();
   return normalizeJob(createdJob);
 }
+
+export async function updateJobApi(id, updatedData) {
+  const response = await fetch(`${API_BASE_URL}/jobs/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update job");
+  }
+
+  const updatedJob = await response.json();
+  return normalizeJob(updatedJob);
+}
+
+export async function deleteJobApi(id) {
+  const response = await fetch(`${API_BASE_URL}/jobs/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete job");
+  }
+
+  return true;
+}

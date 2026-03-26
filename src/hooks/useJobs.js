@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import initialJobs from "../data/jobs";
-import { fetchJobs } from "../services/jobApi";
+import {
+  fetchJobs,
+  createJob,
+  updateJobApi,
+  deleteJobApi,
+} from "../services/jobApi";
 
 function getLatestDate(dateList) {
   const validDates = dateList.filter(Boolean);
@@ -40,18 +45,34 @@ function useJobs() {
     localStorage.setItem("jobs", JSON.stringify(jobList));
   }, [jobList]);
 
-  function addJob(newJob) {
-    setJobList((prev) => [newJob, ...prev]);
+  async function addJob(newJob) {
+    try {
+      const savedJob = await createJob(newJob);
+      setJobList((prev) => [savedJob, ...prev]);
+    } catch (error) {
+      console.error("Failed to create job:", error);
+    }
   }
 
-  function updateJob(updatedJob) {
-    setJobList((prev) =>
-      prev.map((job) => (job.id === updatedJob.id ? updatedJob : job)),
-    );
+  async function updateJob(updatedJob) {
+    try {
+      const savedJob = await updateJobApi(updatedJob.id, updatedJob);
+
+      setJobList((prev) =>
+        prev.map((job) => (job.id === savedJob.id ? savedJob : job)),
+      );
+    } catch (error) {
+      console.error("Failed to update job:", error);
+    }
   }
 
-  function deleteJob(jobId) {
-    setJobList((prev) => prev.filter((job) => job.id !== jobId));
+  async function deleteJob(jobId) {
+    try {
+      await deleteJobApi(jobId);
+      setJobList((prev) => prev.filter((job) => job.id !== jobId));
+    } catch (error) {
+      console.error("Failed to delete job:", error);
+    }
   }
 
   const analyticsSummary = useMemo(() => {

@@ -40,7 +40,7 @@ function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
             />
             <div className="flex flex-col">
               <span className="text-2xl font-bold tracking-tight text-gray-900">
-                JobFlow
+                JOBFLOW
               </span>
             </div>
           </Link>
