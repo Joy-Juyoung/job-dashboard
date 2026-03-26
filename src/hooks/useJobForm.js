@@ -11,6 +11,7 @@ function getInitialFormData(editingJob) {
       interviewDate: editingJob.interviewDate || "",
       offerDate: editingJob.offerDate || "",
       rejectedDate: editingJob.rejectedDate || "",
+      notes: editingJob.notes || "",
     };
   }
 
@@ -23,6 +24,7 @@ function getInitialFormData(editingJob) {
     interviewDate: "",
     offerDate: "",
     rejectedDate: "",
+    notes: "",
   };
 }
 
@@ -84,6 +86,10 @@ function validateJobForm(formData) {
       "Rejected date cannot be earlier than applied date.";
   }
 
+  if (formData.notes.length > 500) {
+    nextErrors.notes = "Notes must be less than 500 characters.";
+  }
+
   return nextErrors;
 }
 
@@ -98,6 +104,7 @@ function normalizeJobData(formData) {
       formData.status === "Interview" ? formData.interviewDate : "",
     offerDate: formData.status === "Offer" ? formData.offerDate : "",
     rejectedDate: formData.status === "Rejected" ? formData.rejectedDate : "",
+    notes: formData.notes.trim(),
   };
 }
 
@@ -155,10 +162,7 @@ function useJobForm({ editingJob, onAddJob, onUpdateJob, onClose }) {
       return;
     }
 
-    onAddJob({
-      id: Date.now(),
-      ...normalizedJob,
-    });
+    onAddJob(normalizedJob);
     onClose();
   }
 

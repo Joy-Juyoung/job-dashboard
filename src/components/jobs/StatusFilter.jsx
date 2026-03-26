@@ -9,10 +9,10 @@ function StatusFilter({ options, selectedStatus, onSelect }) {
             key={option}
             type="button"
             onClick={() => onSelect(option)}
-            className={`rounded-lg px-4 py-2 text-xs font-medium transition ${
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
               isActive
                 ? "bg-gray-900 text-white"
-                : "border bg-white text-gray-600 hover:bg-gray-100"
+                : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-100"
             }`}
           >
             {option}

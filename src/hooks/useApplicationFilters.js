@@ -25,13 +25,16 @@ function useApplicationFilters(jobList) {
         selectedStatus === "All" || job.status === selectedStatus;
 
       const matchesSearch =
+        normalizedSearchTerm === "" ||
         job.company.toLowerCase().includes(normalizedSearchTerm) ||
-        job.position.toLowerCase().includes(normalizedSearchTerm);
+        job.position.toLowerCase().includes(normalizedSearchTerm) ||
+        job.location.toLowerCase().includes(normalizedSearchTerm) ||
+        job.notes?.toLowerCase().includes(normalizedSearchTerm);
 
       return matchesStatus && matchesSearch;
     });
 
-    return result.sort((a, b) => {
+    return [...result].sort((a, b) => {
       if (sortOption === "newest-applied") {
         return new Date(b.appliedDate) - new Date(a.appliedDate);
       }

@@ -1,6 +1,8 @@
 import { formatDate } from "./formatDate";
 
 function getJobSecondaryLabel(job) {
+  if (!job) return "";
+
   if (job.status === "Interview" && job.interviewDate) {
     return `Interview: ${formatDate(job.interviewDate)}`;
   }

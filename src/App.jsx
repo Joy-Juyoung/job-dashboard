@@ -34,7 +34,11 @@ function App() {
         <Route
           index
           element={
-            <DashboardPage jobList={jobList} dashboardStats={dashboardStats} />
+            <DashboardPage
+              jobList={jobList}
+              dashboardStats={dashboardStats}
+              onAddJob={addJob}
+            />
           }
         />
         <Route

@@ -26,16 +26,18 @@ function ApplicationsControls({
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <select
-            id="sort-applications"
-            value={sortOption}
-            onChange={(event) => onSortChange(event.target.value)}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-gray-400"
-          >
-            <option value="latest-activity">Latest Activity</option>
-            <option value="newest-applied">Newest Applied</option>
-            <option value="oldest-applied">Oldest Applied</option>
-          </select>
+          <div className="flex items-center gap-2">
+            <select
+              id="sort-applications"
+              value={sortOption}
+              onChange={(event) => onSortChange(event.target.value)}
+              className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-gray-400"
+            >
+              <option value="latest-activity">Latest Activity</option>
+              <option value="newest-applied">Newest Applied</option>
+              <option value="oldest-applied">Oldest Applied</option>
+            </select>
+          </div>
 
           <button
             type="button"
@@ -59,7 +61,7 @@ function ApplicationsControls({
             type="text"
             value={searchTerm}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search by company or position"
+            placeholder="Search by company, position, location, or notes"
             className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 outline-none transition placeholder:text-gray-400 focus:border-gray-400"
           />
 

@@ -49,6 +49,12 @@ const jobSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    notes: {
+      type: String,
+      trim: true,
+      maxlength: [500, "Notes must be less than 500 characters"],
+      default: "",
+    },
   },
   {
     timestamps: true,

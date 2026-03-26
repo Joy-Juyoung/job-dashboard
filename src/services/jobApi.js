@@ -20,6 +20,7 @@ function normalizeJob(job) {
     interviewDate: job.interviewDate ?? "",
     offerDate: job.offerDate ?? "",
     rejectedDate: job.rejectedDate ?? "",
+    notes: job.notes ?? "",
   };
 }
 

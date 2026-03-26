@@ -3,7 +3,9 @@ import StatusBadge from "./StatusBadge";
 import JobItemActions from "./JobItemActions";
 import getJobSecondaryLabel from "../../utils/getJobSecondaryLabel";
 
-function ApplicationRow({ job, onEdit, onDelete }) {
+function ApplicationRow({ job, onEdit, onDelete, searchTerm = "" }) {
+  if (!job) return null;
+
   const secondaryLabel = getJobSecondaryLabel(job);
 
   return (
@@ -15,6 +17,8 @@ function ApplicationRow({ job, onEdit, onDelete }) {
           location={job.location}
           appliedDate={job.appliedDate}
           secondaryLabel={secondaryLabel}
+          notes={job.notes}
+          searchTerm={searchTerm}
         />
 
         <div className="flex items-center gap-3">

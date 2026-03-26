@@ -119,6 +119,7 @@ function ApplicationsPage({ jobList, onAddJob, onUpdateJob, onDeleteJob }) {
                 job={job}
                 onDelete={handleDelete}
                 onEdit={handleStartEdit}
+                searchTerm={searchTerm}
               />
             ))}
           </div>

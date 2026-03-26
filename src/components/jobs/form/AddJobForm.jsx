@@ -137,6 +137,33 @@ function AddJobForm({ onAddJob, onUpdateJob, onClose, editingJob }) {
               error={errors.rejectedDate}
             />
           )}
+
+          <div className="space-y-2">
+            <label
+              htmlFor="notes"
+              className="text-sm font-medium text-gray-700"
+            >
+              Notes
+            </label>
+
+            <textarea
+              id="notes"
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              placeholder="e.g. Technical interview scheduled next week"
+              rows={4}
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+            />
+            <div className="flex items-center justify-between">
+              {errors.notes && (
+                <p className="text-xs text-red-600">{errors.notes}</p>
+              )}
+              <p className="text-xs text-gray-400 text-right">
+                {formData.notes.length}/500
+              </p>
+            </div>
+          </div>
         </div>
 
         {errors.form && <p className="text-sm text-red-600">{errors.form}</p>}
