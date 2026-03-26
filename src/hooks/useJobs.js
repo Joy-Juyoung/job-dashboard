@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import initialJobs from "../data/jobs";
+import { fetchJobs } from "../services/jobApi";
 
 function getLatestDate(dateList) {
   const validDates = dateList.filter(Boolean);
@@ -21,6 +22,19 @@ function useJobs() {
 
     return initialJobs;
   });
+
+  useEffect(() => {
+    async function loadJobs() {
+      try {
+        const jobsFromApi = await fetchJobs();
+        setJobList(jobsFromApi);
+      } catch (error) {
+        console.error("Failed to load jobs from API:", error);
+      }
+    }
+
+    loadJobs();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("jobs", JSON.stringify(jobList));
