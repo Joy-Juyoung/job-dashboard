@@ -52,10 +52,6 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-10">
       <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
         <div className="mb-8">
-          <div className="mb-4 inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-            Welcome back
-          </div>
-
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             Login
           </h1>

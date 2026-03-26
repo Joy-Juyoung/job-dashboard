@@ -7,6 +7,7 @@ import {
   HiOutlineLockClosed,
   HiOutlineUser,
 } from "react-icons/hi2";
+import { HiArrowLeft } from "react-icons/hi";
 import { registerUser } from "../services/authApi";
 
 function RegisterPage() {
@@ -50,9 +51,12 @@ function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-10">
       <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
         <div className="mb-8">
-          <div className="mb-4 inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-            Get started
-          </div>
+          <Link
+            to="/login"
+            className="group inline-flex items-center gap-1 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+          >
+            <HiArrowLeft className="h-4 w-4 transform transition-transform duration-200 ease-out group-hover:translate-x-1" />
+          </Link>
 
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             Create Account
