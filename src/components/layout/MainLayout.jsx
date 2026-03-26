@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
-function MainLayout({ children }) {
+function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -15,7 +16,9 @@ function MainLayout({ children }) {
 
         <div className="flex flex-1 flex-col lg:pl-64">
           <Header setIsSidebarOpen={setIsSidebarOpen} />
-          <main className="flex-1 p-6">{children}</main>
+          <main className="flex-1 p-6">
+            <Outlet />
+          </main>
         </div>
       </div>
     </div>

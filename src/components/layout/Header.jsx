@@ -40,11 +40,11 @@ function Header({ setIsSidebarOpen }) {
           </p>
         </div>
 
-        <div>
+        <div className="flex items-center">
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             Logout
           </button>
