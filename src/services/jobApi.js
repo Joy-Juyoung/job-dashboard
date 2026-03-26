@@ -24,3 +24,20 @@ export async function fetchJobs() {
   const jobs = await response.json();
   return jobs.map(normalizeJob);
 }
+
+export async function createJob(jobData) {
+  const response = await fetch(`${API_BASE_URL}/jobs`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(jobData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create job");
+  }
+
+  const createdJob = await response.json();
+  return normalizeJob(createdJob);
+}
