@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
-function MainLayout() {
+function MainLayout({ setToken, clearJobs }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -15,7 +15,11 @@ function MainLayout() {
         />
 
         <div className="flex flex-1 flex-col lg:pl-64">
-          <Header setIsSidebarOpen={setIsSidebarOpen} />
+          <Header
+            setIsSidebarOpen={setIsSidebarOpen}
+            setToken={setToken}
+            clearJobs={clearJobs}
+          />
           <main className="flex-1 p-6">
             <Outlet />
           </main>

@@ -1,14 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  HiOutlineEye,
-  HiOutlineEyeSlash,
-  HiOutlineEnvelope,
-  HiOutlineLockClosed,
-} from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 
-function LoginPage() {
+function LoginPage({ setToken }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -16,7 +10,6 @@ function LoginPage() {
     password: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,14 +24,18 @@ function LoginPage() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+
     setError("");
     setIsSubmitting(true);
 
     try {
       const data = await loginUser(formData);
 
+      // 🔥 핵심: localStorage + state 둘 다 업데이트
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+
+      setToken(data.token); // 👈 이게 가장 중요
 
       navigate("/", { replace: true });
     } catch (error) {
@@ -49,110 +46,45 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-10">
-      <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Login
-          </h1>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-900">Sign in</h2>
 
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to access your JobFlow dashboard and manage your
-            applications.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-
-            <div className="relative">
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <HiOutlineEnvelope className="h-5 w-5" />
-              </span>
-
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                autoComplete="email"
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div>
+            <label className="text-sm text-gray-600">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
+              required
+            />
           </div>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-
-            <div className="relative">
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <HiOutlineLockClosed className="h-5 w-5" />
-              </span>
-
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                title={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <HiOutlineEyeSlash className="h-5 w-5" />
-                ) : (
-                  <HiOutlineEye className="h-5 w-5" />
-                )}
-              </button>
-            </div>
+          <div>
+            <label className="text-sm text-gray-600">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
+              required
+            />
           </div>
 
-          {error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-              {error}
-            </div>
-          )}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-gray-900 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
           >
-            {isSubmitting ? "Signing in..." : "Login"}
+            {isSubmitting ? "Signing in..." : "Sign in"}
           </button>
         </form>
-
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Don&apos;t have an account?{" "}
-          <Link
-            to="/register"
-            className="font-medium text-gray-900 underline-offset-4 transition hover:underline"
-          >
-            Create account
-          </Link>
-        </p>
       </div>
     </div>
   );

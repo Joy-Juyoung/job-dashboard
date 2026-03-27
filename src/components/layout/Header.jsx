@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiOutlineMenu, HiOutlineHome } from "react-icons/hi";
 
-function Header({ setIsSidebarOpen }) {
+function Header({ setIsSidebarOpen, setToken, clearJobs }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -9,6 +9,10 @@ function Header({ setIsSidebarOpen }) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("jobs");
+
+    clearJobs();
+    setToken(null);
+
     navigate("/login", { replace: true });
   }
 
@@ -49,6 +53,7 @@ function Header({ setIsSidebarOpen }) {
           >
             Logout
           </button>
+
           <button
             type="button"
             onClick={() => setIsSidebarOpen(true)}

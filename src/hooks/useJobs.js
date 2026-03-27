@@ -16,15 +16,14 @@ function getLatestDate(dateList) {
   return validDates.sort((a, b) => new Date(b) - new Date(a))[0];
 }
 
-function useJobs() {
+function useJobs(token) {
   const [jobList, setJobList] = useState([]);
 
   useEffect(() => {
     async function loadJobs() {
-      const token = localStorage.getItem("token");
+      setJobList([]);
 
       if (!token) {
-        setJobList([]);
         return;
       }
 
@@ -38,7 +37,11 @@ function useJobs() {
     }
 
     loadJobs();
-  }, []);
+  }, [token]);
+
+  function clearJobs() {
+    setJobList([]);
+  }
 
   async function addJob(newJob) {
     try {
@@ -150,6 +153,7 @@ function useJobs() {
     addJob,
     updateJob,
     deleteJob,
+    clearJobs,
   };
 }
 

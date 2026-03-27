@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -9,6 +10,8 @@ import RegisterPage from "./pages/RegisterPage";
 import useJobs from "./hooks/useJobs";
 
 function App() {
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
+
   const {
     jobList,
     dashboardStats,
@@ -16,18 +19,19 @@ function App() {
     addJob,
     updateJob,
     deleteJob,
-  } = useJobs();
+    clearJobs,
+  } = useJobs(token);
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage setToken={setToken} />} />
       <Route path="/register" element={<RegisterPage />} />
 
       <Route
         path="/"
         element={
-          <ProtectedRoute>
-            <MainLayout />
+          <ProtectedRoute token={token}>
+            <MainLayout setToken={setToken} clearJobs={clearJobs} />
           </ProtectedRoute>
         }
       >
@@ -58,7 +62,10 @@ function App() {
         />
       </Route>
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route
+        path="*"
+        element={<Navigate to={token ? "/" : "/login"} replace />}
+      />
     </Routes>
   );
 }
