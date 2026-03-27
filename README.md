@@ -166,15 +166,14 @@ job-dashboard/
 
 ---
 
-## How to Use
+## 🚀 How to Use
 
-1. Register a new account
-2. Log in with your account
-3. Add job applications from the Applications page
-4. Update status, dates, and notes as your application progresses
-5. Review your dashboard and analytics for a summary of your job search activity
+👉 Live Demo: https://jobflow-steel-five.vercel.app
 
-All job data is user-specific, so each account only sees its own records.
+1. Open the live demo link
+2. Create an account
+3. Log in with your account
+4. Start adding and managing your job applications
 
 ---
 
